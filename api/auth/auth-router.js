@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const Users = require('../users/users.model')
+const restricted  = require('../middleware/restricted.js')
+const generateToken = require('./token_generator.js')
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   const { username, password } = req.body
 
   if (!username || !password) {
@@ -19,8 +20,8 @@ router.post('/register', async (req, res) => {
     const newUser = await Users.add({ username, password: await bcrypt.hash(password, 8) });
     res.status(201).json(newUser);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error registering user" });
+    next(error);
+    // res.status(500).json({ message: "Error registering user" });
   }
   /*
     IMPLEMENT
@@ -49,23 +50,31 @@ router.post('/register', async (req, res) => {
   */
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', restricted, async (req, res, next) => {
   const { username, password } = req.body;
+
+  //console.log("Login request received with username:", username);
 
   if (!username || !password) {
     return res.status(400).json({ message: "username and password required" });
   }
   try {
     const user = await Users.findBy({ username }).first();
+    //console.log("User found in database:", user);
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ message: "invalid credentials" });
     }
 
     const token = generateToken(user);
-    res.status(200).json({ message: `welcome, ${user.username}`, token });
+    const responseObject = {
+      message: `welcome, ${user.username}`,
+      token: token
+    };
+    res.status(200).json(responseObject);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error logging in" });
+    //console.log("Error occurred during login:", error);
+    next(error);
+    // res.status(500).json({ message: "Error logging in" });
   }
   /*
     IMPLEMENT
@@ -92,17 +101,5 @@ router.post('/login', async (req, res) => {
   */
 });
 
-function generateToken(user) {
-  const payload = {
-    subject: user.id,
-    username: user.username,
-  };
-  const secret = process.env.JWT_SECRET || "shh"; // Using fallback secret "shh"
-  const options = {
-    expiresIn: '1d',
-  };
-
-  return jwt.sign(payload, secret, options);
-}
 
 module.exports = router;
