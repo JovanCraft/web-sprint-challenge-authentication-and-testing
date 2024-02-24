@@ -16,5 +16,5 @@ function generateToken(user) {
 
 
   module.exports = {
-    generateToken, // Export the generateToken function
+    generateToken, 
   };

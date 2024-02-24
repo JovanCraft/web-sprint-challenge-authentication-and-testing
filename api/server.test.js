@@ -2,7 +2,7 @@
 const request = require('supertest');
 const server = require('./server');
 const db = require('../data/dbConfig')
-const { generateToken } = require('./auth/auth-router')
+const { generateToken } = require('./auth/token_generator')
 
 test('sanity', () => {
   expect(true).toBe(true)
@@ -10,17 +10,17 @@ test('sanity', () => {
 
 describe('Authentication Endpoints', () => {
   beforeAll(async () => {
-    // Run migrations before running tests
+
     await db.migrate.latest();
   });
 
   afterEach(async () => {
-    // Rollback migrations after each test to ensure a clean state
+
     await db.migrate.rollback();
   });
 
   afterAll(async () => {
-    // Close the database connection after all tests
+
     await db.destroy();
   });
 
@@ -60,13 +60,13 @@ describe('Authentication Endpoints', () => {
         .set('Authorization', token)
         .send(existingUser);
 
-      console.log("Response Body", res.body);
+      // console.log("Response Body", res);
 
       expect(res.status).toBe(200);
 
-      expect(res.body).toHaveProperty('message', 'welcome, existinguser');
-      //  expect(res.body).toHaveProperty('token');
-      // You can add more assertions here based on your expected response
+      // expect(res.body).toHaveProperty('message', 'welcome, existinguser');
+       expect(res.body).toHaveProperty('token');
+
     });
 
     it('should return 401 if username or password is incorrect', async () => {
@@ -78,8 +78,8 @@ describe('Authentication Endpoints', () => {
       expect(res.body).toEqual({ message: "invalid credentials" });
     });
 
-    // Add more test cases to cover different scenarios
+    //Add more
   });
 
-  // Add more describe blocks for other endpoints if necessary
+  // Add more
 });

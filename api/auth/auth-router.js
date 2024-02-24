@@ -17,7 +17,8 @@ router.post('/register', async (req, res, next) => {
       return res.status(409).json({ message: "username taken" });
     }
 
-    const newUser = await Users.add({ username, password: await bcrypt.hash(password, 8) });
+    const saltRounds = 8;
+    const newUser = await Users.add({ username, password: await bcrypt.hash(password, saltRounds) });
     res.status(201).json(newUser);
   } catch (error) {
     next(error);
