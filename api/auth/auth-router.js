@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
 const Users = require('../users/users.model')
-const restricted  = require('../middleware/restricted.js')
-const generateToken = require('./token_generator.js')
+const { generateToken } = require('./token_generator')
 
 router.post('/register', async (req, res, next) => {
   const { username, password } = req.body
@@ -51,7 +50,7 @@ router.post('/register', async (req, res, next) => {
   */
 });
 
-router.post('/login', restricted, async (req, res, next) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   //console.log("Login request received with username:", username);
@@ -74,8 +73,8 @@ router.post('/login', restricted, async (req, res, next) => {
     res.status(200).json(responseObject);
   } catch (error) {
     //console.log("Error occurred during login:", error);
-    next(error);
-    // res.status(500).json({ message: "Error logging in" });
+    console.error('Error logging in:', error)
+    res.status(500).json({ message: "Error logging in" });
   }
   /*
     IMPLEMENT
