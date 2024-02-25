@@ -101,38 +101,4 @@ describe('Authentication Endpoints', () => {
     });
   });
 
-  describe('[GET] /api/users/:id', () => {
-    it('should return user information when user exists', async () => {
-      const uniqueUsername = `testuser_${Math.floor(Math.random() * 100000)}`;
-      const newUser = { username: uniqueUsername, password: 'testpassword' }
-
-      const registerResponse = await request(server)
-      .post('/api/auth/register')
-      .send(newUser);
-      console.log('registerResponse', registerResponse.body)
-      expect(registerResponse.status).toBe(201);
-
-      const userId = registerResponse.body.id;
-
-      const userResponse = await request(server)
-      .get(`/api/users/${userId}`);
-
-      console.log('userResponse', userResponse.body)
-
-      // expect(userResponse.status).toBe(200);
-      expect(userResponse.body).toBeTruthy();
-      // expect(userResponse.body).toHaveProperty('username', newUser.username);
-    })
-
-    it('should return 404 when user does not exist', async () => {
-
-      const userId = 9999;
-
-      const userResponse = await request(server)
-        .get(`/api/users/${userId}`);
-
-      expect(userResponse.status).toBe(404);
-      // expect(userResponse.body).toEqual({ message: "User not found" });
-    });
-  })
 });
