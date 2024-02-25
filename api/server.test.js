@@ -77,6 +77,33 @@ describe('Authentication Endpoints', () => {
 
     //Add more
   });
+  
+  describe('[GET] /api/jokes', () => {
+    it('should return jokes when authenticated', async () => {
+      const existingUser = { username: 'existinguser', password: 'testpassword' };
+      await request(server).post('/api/auth/register').send(existingUser);
 
-  // Add more
+      const loginResponse = await request(server)
+        .post('/api/auth/login')
+        .send(existingUser);
+
+      const token = loginResponse.body.token;
+
+      const jokesResponse = await request(server)
+        .get('/api/jokes')
+        .set('Authorization', token);
+
+      expect(jokesResponse.status).toBe(200);
+      expect(jokesResponse.body).toBeDefined();
+
+    });
+
+    it('should return 401 when not authenticated', async () => {
+      const jokesResponse = await request(server).get('/api/jokes');
+
+      expect(jokesResponse.status).toBe(401);
+      expect(jokesResponse.body).toEqual({ message: "invalid credentials" });
+    });
+  });
+
 });
