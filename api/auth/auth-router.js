@@ -50,7 +50,7 @@ router.post('/register', async (req, res, next) => {
   */
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
 
   //console.log("Login request received with username:", username);
@@ -71,6 +71,9 @@ router.post('/login', async (req, res) => {
       token: token
     };
     res.status(200).json(responseObject);
+    if(!token){
+      return res.status(401).json({ message: 'token required' });
+    }
   } catch (error) {
     //console.log("Error occurred during login:", error);
     console.error('Error logging in:', error)
