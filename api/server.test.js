@@ -97,7 +97,7 @@ describe('Authentication Endpoints', () => {
       const jokesResponse = await request(server).get('/api/jokes');
 
       expect(jokesResponse.status).toBe(401);
-      expect(jokesResponse.body).toEqual({ message: "invalid credentials" });
+      expect(jokesResponse.body).toEqual({ message: "token required" });
     });
   });
 
