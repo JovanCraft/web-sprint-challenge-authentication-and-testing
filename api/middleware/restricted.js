@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   const token = req.headers.authorization;
 
   if (!token) {
-    return res.status(401).json({ message: "invalid credentials" });
+    return res.status(401).json({ message: "token required" });
   }
 
   jwt.verify(token, process.env.JWT_SECRET || "shh", (err, decodedToken) => {

@@ -71,9 +71,7 @@ router.post('/login', async (req, res, next) => {
       token: token
     };
     res.status(200).json(responseObject);
-    if(!token){
-      return res.status(401).json({ message: 'token required' });
-    }
+
   } catch (error) {
     //console.log("Error occurred during login:", error);
     console.error('Error logging in:', error)
