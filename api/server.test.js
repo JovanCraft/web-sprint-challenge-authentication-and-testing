@@ -11,13 +11,10 @@ test('sanity', () => {
 describe('Authentication Endpoints', () => {
   beforeAll(async () => {
 
+    await db.migrate.rollback();
     await db.migrate.latest();
   });
 
-  afterEach(async () => {
-
-    await db.migrate.rollback();
-  });
 
   afterAll(async () => {
 
@@ -64,8 +61,8 @@ describe('Authentication Endpoints', () => {
 
       expect(res.status).toBe(200);
       expect(res.body).toBeTruthy()
-      // expect(res.body).toHaveProperty('message', 'welcome, existinguser');
-      //  expect(res.body).toHaveProperty('token');
+      expect(res.body).toHaveProperty('message', 'welcome, existinguser');
+      expect(res.body).toHaveProperty('token');
 
     });
 
