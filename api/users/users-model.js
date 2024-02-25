@@ -7,8 +7,8 @@ function findBy(filter) {
 
 async function findById(id) {
     // return db('users').where({ id }).first();
-    const user = await db('products').where('id', '=', id).first()
-    return user
+    const user = await db('users').where('id', '=', id).first()
+    return user;
   }
 
 async function add(user) {
