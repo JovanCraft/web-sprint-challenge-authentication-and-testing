@@ -39,4 +39,4 @@ Your finished project must include all of the following requirements (further in
 - Do not alter your `package.json` file except to install extra libraries. Do not update existing packages.
 - The database already has the `users` table, but if you run into issues, the migration is available.
 - In your solution, it is essential that you follow best practices and produce clean and professional results.
-- Schedule time to review, refine, and assess your work and perform basic professional polishing.
+- Schedule time to review, refine, and assess your work and perform basic professional polishing...
